@@ -6,7 +6,7 @@
 
 ## Beschreibung
 
-`din5008a` setzt eine Markdown-Notiz als Brief nach DIN 5008 Form A: Rücksendeangabe, Anschriftzone (6 Zeilen), Informationsblock (75 × 63 mm bei 125/32 mm, unten rechts bündig, mit vCard-QR-Code), Betreff bei 103,46 mm, Falz- und Lochmarken, Fußzeile mit Kontakt, Bankverbindung und „Seite x von y“, Folgeseitenkopf ab Seite 2, SVG-Unterschrift und Anlagen. Die Briefdaten stehen im Frontmatter der Notiz, der Absender in einer Profildatei; der Brieftext ist normales Markdown (Absätze, Listen, Tabellen, Hervorhebungen, Hinweisboxen, Aufgaben, Formeln). Schriften: die mit Markdown Office gelieferten Source Serif 4, Source Sans 3 und Source Code Pro (variabel), keine Systemschriften. Alles läuft offline, auch der QR-Code.
+`din5008a` setzt eine Markdown-Notiz als Brief nach DIN 5008 Form A: Rücksendeangabe, Anschriftzone (6 Zeilen), Informationsblock (75 × 63 mm bei 125/32 mm, unten rechts bündig, mit vCard-QR-Code), Betreff bei 103,46 mm, Falz- und Lochmarken, Fußzeile mit Kontakt, Bankverbindung und „Seite x von y“, Folgeseitenkopf ab Seite 2, SVG-Unterschrift und Anlagen. Die Briefdaten stehen im Frontmatter der Notiz, der Absender in einer Profildatei; der Brieftext ist normales Markdown (Absätze, Listen, Tabellen, Hervorhebungen, Hinweisboxen, Aufgaben, Formeln, Mermaid-Diagramme). Schriften: die mit Markdown Office gelieferten Source Serif 4, Source Sans 3 und Source Code Pro (variabel), keine Systemschriften. Alles läuft offline, auch der QR-Code.
 
 Das Layout stammt aus [typst-DIN5008a](https://github.com/jcmx9/typst-DIN5008a).
 
@@ -81,7 +81,7 @@ Der Text beginnt mit der Anrede. Gruß, Unterschrift, Name und Anlagen setzt die
 | `x-attachments` | Anlagen als Liste, z. B. `[Angebot, AGB]` | keine |
 | `x-debug` | Rote Rahmen um alle positionierten Felder, Millimeterskala | `false` |
 | `x-fold-marks` | Falz- und Lochmarken | `true` |
-| `x-profile-<feld>` | Überschreibt ein Profilfeld für diesen Brief, z. B. `x-profile-phone` | – |
+| `x-profile-<feld>` | Überschreibt ein Profilfeld für diesen Brief, z. B. `x-profile-phone`; `x-profile-signature` wird ignoriert | – |
 
 Außerdem gelten die gemeinsamen Schlüssel von Markdown Office (`title`, `embed_source`, `hard_breaks`). `title` wird PDF-Titel; ohne `title` ist es der Betreff.
 
@@ -102,9 +102,11 @@ Ein Profil ist eine YAML-Datei mit den Absenderdaten. Weitere Dateien (Unterschr
 | `bic` | BIC (Fußzeile) |
 | `bank` | Bank (Fußzeile) |
 | `qr` | `true`: vCard-QR-Code im Informationsblock |
-| `signature` | SVG-Datei der Unterschrift, relativ zum Profil |
+| `signature` | Dateiname der SVG-Unterschrift direkt neben dem Profil (Buchstaben, Ziffern, `.`, `_`, `-`, Leerzeichen; Endung `.svg`; keine Ordner, kein `..`) |
 | `signature-width` | Breite der Unterschrift in mm, z. B. `40mm` (andere Angaben: 40 mm) |
-| `accent` | Akzentfarbe für Marken, Linien, Absender und QR-Code, z. B. `"#B03060"` |
+| `accent` | Akzentfarbe für Marken, Linien, Absender und QR-Code, in Anführungszeichen als `"#RRGGBB"`, z. B. `"#B03060"`; leer oder ungültig: `#B03060` |
+
+Die Textfelder (`name` bis `bank`) werden als Text gesetzt; eine Liste oder Zuordnung dort bricht den Export mit einer Meldung ab. **Telefonnummern in Anführungszeichen setzen** (`phone: "+49 89 123456"`): YAML liest `+4989123456` ohne Anführungszeichen als Zahl, das Plus fällt dann weg. Ebenso `accent` immer in Anführungszeichen: ohne sie ist `#B03060` in YAML ein Kommentar, und die Standardfarbe gilt. `qr` versteht `true`/`yes`/`on`.
 
 Ein Profilname (`a-z`, `0-9`, `_`, `-`) wird in dieser Reihenfolge gesucht, die erste vorhandene Datei gilt:
 
@@ -114,7 +116,7 @@ Ein Profilname (`a-z`, `0-9`, `_`, `-`) wird in dieser Reihenfolge gesucht, die 
 
 ### Unterschrift
 
-Die Unterschrift ist eine SVG-Datei. `currentColor` im SVG wird zu Eisengallustinte (Salix, `#103c78`); SVGs mit festen Farben behalten diese. Die Unterschrift wird auf `signature-width` skaliert und über den Namen gesetzt.
+Die Unterschrift ist eine SVG-Datei direkt neben dem Profil; jeder andere Wert für `signature` bricht den Export ab, und ein Brief kann sie nicht über `x-profile-signature` austauschen. `currentColor` im SVG wird zu Eisengallustinte (Salix, `#103c78`); SVGs mit festen Farben behalten diese. Die Unterschrift wird auf `signature-width` skaliert und über den Namen gesetzt.
 
 ## Layout nach DIN 5008 Form A
 

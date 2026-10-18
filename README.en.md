@@ -6,7 +6,7 @@
 
 ## Description
 
-`din5008a` sets a Markdown note as a letter after DIN 5008 Form A: return address, address zone (6 lines), information block (75 × 63 mm at 125/32 mm, aligned bottom right, with a vCard QR code), subject at 103.46 mm, fold and punch marks, footer with contact, bank details and "Page x of y", follow-up header from page 2, SVG signature and enclosures. The letter data lives in the note's front matter, the sender in a profile file; the letter text is normal Markdown (paragraphs, lists, tables, emphasis, alerts, tasks, math). Fonts: Source Serif 4, Source Sans 3 and Source Code Pro (variable) as bundled with Markdown Office, no system fonts. Everything works offline, including the QR code.
+`din5008a` sets a Markdown note as a letter after DIN 5008 Form A: return address, address zone (6 lines), information block (75 × 63 mm at 125/32 mm, aligned bottom right, with a vCard QR code), subject at 103.46 mm, fold and punch marks, footer with contact, bank details and "Page x of y", follow-up header from page 2, SVG signature and enclosures. The letter data lives in the note's front matter, the sender in a profile file; the letter text is normal Markdown (paragraphs, lists, tables, emphasis, alerts, tasks, math, Mermaid diagrams). Fonts: Source Serif 4, Source Sans 3 and Source Code Pro (variable) as bundled with Markdown Office, no system fonts. Everything works offline, including the QR code.
 
 The layout comes from [typst-DIN5008a](https://github.com/jcmx9/typst-DIN5008a).
 
@@ -81,7 +81,7 @@ The text starts with the salutation. The template sets closing, signature, name 
 | `x-attachments` | Enclosures as a list, e.g. `[Angebot, AGB]` | none |
 | `x-debug` | Red outlines around all positioned fields, millimetre scale | `false` |
 | `x-fold-marks` | Fold and punch marks | `true` |
-| `x-profile-<field>` | Overrides a profile field for this letter, e.g. `x-profile-phone` | – |
+| `x-profile-<field>` | Overrides a profile field for this letter, e.g. `x-profile-phone`; `x-profile-signature` is ignored | – |
 
 The shared Markdown Office keys (`title`, `embed_source`, `hard_breaks`) apply as well. `title` becomes the PDF title; without `title` it is the subject.
 
@@ -102,9 +102,11 @@ A profile is a YAML file with the sender data. Further files (signature) sit dir
 | `bic` | BIC (footer) |
 | `bank` | Bank (footer) |
 | `qr` | `true`: vCard QR code in the information block |
-| `signature` | SVG file of the signature, relative to the profile |
+| `signature` | File name of the SVG signature directly next to the profile (letters, digits, `.`, `_`, `-`, spaces; extension `.svg`; no folders, no `..`) |
 | `signature-width` | Width of the signature in mm, e.g. `40mm` (anything else: 40 mm) |
-| `accent` | Accent colour for marks, lines, sender and QR code, e.g. `"#B03060"` |
+| `accent` | Accent colour for marks, lines, sender and QR code, quoted as `"#RRGGBB"`, e.g. `"#B03060"`; empty or invalid: `#B03060` |
+
+The text fields (`name` to `bank`) are set as text; a list or map there stops the export with a message. **Put phone numbers in quotes** (`phone: "+49 89 123456"`): YAML reads an unquoted `+4989123456` as a number and the plus is lost. Likewise always quote `accent`: unquoted, `#B03060` is a YAML comment and the default colour applies. `qr` accepts `true`/`yes`/`on`.
 
 A profile name (`a-z`, `0-9`, `_`, `-`) is looked up in this order; the first existing file wins:
 
@@ -114,7 +116,7 @@ A profile name (`a-z`, `0-9`, `_`, `-`) is looked up in this order; the first ex
 
 ### Signature
 
-The signature is an SVG file. `currentColor` in the SVG becomes iron-gall ink (Salix, `#103c78`); SVGs with fixed colours keep them. The signature is scaled to `signature-width` and placed above the name.
+The signature is an SVG file directly next to the profile; any other value for `signature` stops the export, and a letter cannot swap it via `x-profile-signature`. `currentColor` in the SVG becomes iron-gall ink (Salix, `#103c78`); SVGs with fixed colours keep them. The signature is scaled to `signature-width` and placed above the name.
 
 ## DIN 5008 Form A layout
 

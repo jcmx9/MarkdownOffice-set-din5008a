@@ -8,6 +8,7 @@
 #import mdo + "/vendor/cmarker/lib.typ" as cmarker
 #import mdo + "/vendor/mitex/lib.typ": mitex
 #import mdo + "/lib/markdown.typ": preprocess, frontmatter
+#import mdo + "/vendor/mmdr/lib.typ": mermaid-svg
 #let version = sys.inputs.at("version", default: "")
 
 // Bullet character in Source Sans 3 (consistent with header/footer)
@@ -369,12 +370,40 @@
 // Sender: the profile file the pipeline found, each field overridable as x-profile-<field>.
 #let profile-path = inp("profile")
 #let profile = if profile-path == "" { (:) } else { yaml(profile-path) }
+#if type(profile) != dictionary {
+  panic("din5008a: Profil muss Felder enthalten (name: …, street: …), keine Liste oder einzelner Wert")
+}
 #let profile-dir = profile-path.split("/").slice(0, -1).join("/")
+// YAML -> bool with the same spelling rules as the front matter flags below.
+#let to-bool(v) = if type(v) == bool { v } else if v == none { false } else {
+  lower(str(v).trim()) in ("true", "yes", "on")
+}
+// Sender = profile + x-profile-<field> overrides from the note, normalised once, because YAML
+// types values itself: `phone: +4989123` becomes an integer, `city: 80331` too, and an unquoted
+// `accent: #B03060` is a comment (null). Text fields become str (none stays none); maps and lists
+// are refused; accent falls back to the default colour unless it is "#RRGGBB"; qr is a bool.
+// `signature` cannot be overridden from the note: the note must not choose which file next to
+// the profile is read (x-profile-signature is ignored).
+#let text-fields = ("name", "street", "city", "phone", "email", "iban", "bic", "bank")
 #let sender = {
   let s = profile
   for (k, v) in fm.pairs() {
-    if k.starts-with("x-profile-") { s.insert(k.slice("x-profile-".len()), v) }
+    if k.starts-with("x-profile-") and k != "x-profile-signature" {
+      s.insert(k.slice("x-profile-".len()), v)
+    }
   }
+  for k in text-fields {
+    let v = s.at(k, default: none)
+    if type(v) in (dictionary, array) {
+      panic("din5008a: Profilfeld " + k + " muss ein Text sein, keine Liste oder Zuordnung")
+    }
+    if v != none { s.insert(k, str(v)) }
+  }
+  let a = s.at("accent", default: none)
+  s.insert("accent", if a != none and str(a).trim().match(regex("^#[0-9A-Fa-f]{6}$")) != none {
+    str(a).trim()
+  } else { "#B03060" })
+  s.insert("qr", to-bool(s.at("qr", default: false)))
   s
 }
 
@@ -441,11 +470,17 @@
 
 #let flag(key, default) = {
   let v = fm.at(key, default: default)
-  if type(v) == bool { v } else { str(v).trim().lower() in ("true", "yes", "on") }
+  if type(v) == bool { v } else { lower(str(v).trim()) in ("true", "yes", "on") }
 }
-#let signature = if flag("x-sign", true) and sender.at("signature", default: none) != none and profile-dir != "" {
-  read(profile-dir + "/" + sender.signature)
-} else { none }
+// Signature: only a plain .svg file name directly next to the profile (no folders, no "..").
+#let sig-name = sender.at("signature", default: none)
+#let sig-wanted = flag("x-sign", true) and sig-name != none and profile-dir != ""
+#let sig-ok = (sig-wanted and type(sig-name) == str and not sig-name.contains("..")
+  and sig-name.match(regex("^[A-Za-z0-9._ -]+\.svg$")) != none)
+#if sig-wanted and not sig-ok {
+  panic("din5008a: signature muss eine .svg-Datei direkt neben dem Profil sein (z. B. signature: unterschrift.svg)")
+}
+#let signature = if sig-ok { read(profile-dir + "/" + sig-name) } else { none }
 #let atts = fm.at("x-attachments", default: ())
 // Empty or missing text keys (the header template writes `x-subject: ""`) mean "not set".
 #let opt-text(key) = {
@@ -468,11 +503,50 @@
     let m = w.match(regex("^(\d+(?:\.\d+)?)mm$"))
     if m == none { 40mm } else { float(m.captures.at(0)) * 1mm }
   },
-  accent: rgb(sender.at("accent", default: "#B03060")),
+  accent: rgb(sender.accent),
   attachments: if atts == none { () } else if type(atts) == array { atts.map(str) } else { (str(atts),) },
   debug: flag("x-debug", false),
   fold-marks: flag("x-fold-marks", true),
   lang: lang,
+)
+
+// Mermaid diagrams (```mermaid) offline via the bundled mmdr package, with memo's quiet palette
+// and the bundled Source Sans 3; scaled to the text width and at most 12 cm high so a diagram
+// never fills a letter page. font-weight 500 because weight 400 of the variable font falls back
+// to its ExtraLight default instance inside SVGs.
+#let mermaid-max-height = 12cm
+#let mermaid-layout = (node_spacing: 25, rank_spacing: 35)
+#let mermaid-theme = (
+  font_family: "SourceSans3VF",
+  primary_color: "#f4f2ee",
+  primary_text_color: "#2b2b2b",
+  primary_border_color: "#b9b2a6",
+  secondary_color: "#fbeab0",
+  tertiary_color: "#fdfcfa",
+  line_color: "#6b6b6b",
+  text_color: "#2b2b2b",
+  edge_label_background: "#ffffff",
+  cluster_background: "#fdfcfa",
+  cluster_border: "#e4e1dc",
+  background: "#ffffff",
+  sequence_actor_fill: "#f4f2ee",
+  sequence_actor_border: "#b9b2a6",
+  sequence_actor_line: "#b9b2a6",
+  sequence_note_fill: "#fbeab0",
+  sequence_note_border: "#e0c66a",
+)
+#show raw.where(lang: "mermaid", block: true): it => block(
+  width: 100%, above: 1.4em, below: 1.4em, breakable: false,
+  {
+    let svg = bytes(mermaid-svg(it.text, base-theme: "modern", theme: mermaid-theme, layout: mermaid-layout)
+      .replace("font-family=", "font-weight=\"500\" font-family="))
+    align(center, layout(size => {
+      let natural = measure(image(svg, format: "svg"))
+      let scale = calc.min(1.0, size.width / natural.width, mermaid-max-height / natural.height)
+      image(svg, format: "svg", alt: if lang == "de" { "Diagramm" } else { "Diagram" },
+        width: natural.width * scale)
+    }))
+  },
 )
 
 #cmarker.render(
