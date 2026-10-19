@@ -61,6 +61,15 @@
   let fold-2 = 192mm                  // fold mark 2
   let punch = 148.5mm                 // punch hole mark
 
+  // Place line "<zip> <city>": printed exactly like the former single `city` field, so an old
+  // profile (city: "33609 Bielefeld", no zip) renders byte-identical text; zip alone or city
+  // alone print on their own.
+  let zip = sender.at("zip", default: none)
+  let city = sender.at("city", default: none)
+  let place-line = if zip == none or zip == "" { city }
+    else if city == none or city == "" { zip }
+    else { zip + " " + city }
+
   // follow-up header data
   let recipient-name = if recipient.len() > 0 { recipient.at(0) } else { "" }
   let sep = [ ▪ ]
@@ -123,9 +132,9 @@
             {
               let parts = ()
               if sender.at("name", default: none) != none { parts.push(sender.name) }
-              if sender.at("street", default: none) != none and sender.at("city", default: none) != none {
+              if sender.at("street", default: none) != none and place-line != none {
                 parts.push(sender.street)
-                parts.push(sender.city)
+                parts.push(place-line)
               }
               if sender.at("phone", default: none) != none { parts.push(labels.phone + " " + sender.phone) }
               if sender.at("email", default: none) != none { parts.push(labels.email + " " + sender.email) }
@@ -215,8 +224,8 @@
           text(sender.street)
           linebreak()
         }
-        if sender.at("city", default: none) != none {
-          text(sender.city)
+        if place-line != none {
+          text(place-line)
           linebreak()
         }
         if sender.at("phone", default: none) != none {
@@ -228,18 +237,36 @@
         }
         // QR code (optional)
         if sender.at("qr", default: false) == true {
+          // vCard 3.0 (RFC 2426): backslash, comma and semicolon are separators inside a value
+          // and must be escaped, otherwise "Weber, Anna" or "Haus 3; Hinterhof" shift the ADR
+          // components and contact apps read the wrong fields. Backslash first.
+          let esc(v) = str(v).replace("\\", "\\\\").replace(",", "\\,").replace(";", "\\;")
           let vcard-parts = ("BEGIN:VCARD", "VERSION:3.0")
           if sender.at("name", default: none) != none {
-            vcard-parts.push("FN:" + sender.name)
+            vcard-parts.push("FN:" + esc(sender.name))
           }
-          if sender.at("street", default: none) != none and sender.at("city", default: none) != none {
-            vcard-parts.push("ADR:;;" + sender.street + ";" + sender.city + ";;;Germany")
+          if sender.at("street", default: none) != none and place-line != none {
+            // ADR = PO box; extended; street; locality; region; postal code; country. Contact
+            // apps only file the postcode correctly when it has its own component, so without
+            // `zip` a leading 4-5 digit postcode is split off `city` (old profiles: "33609
+            // Bielefeld"); anything else ("D-33609 Bielefeld") stays whole in the locality.
+            let (v-zip, v-city) = if zip != none and zip != "" { (zip, if city == none { "" } else { city }) }
+              else {
+                let m = if city == none { none } else { city.match(regex("^(\\d{4,5})\\s+(.+)$")) }
+                if m == none { ("", if city == none { "" } else { city }) }
+                else { (m.captures.at(0), m.captures.at(1)) }
+              }
+            // Default "Germany" keeps the value earlier versions wrote into every vCard.
+            let country = sender.at("country", default: none)
+            let v-country = if country == none or country.trim() == "" { "Germany" } else { country }
+            vcard-parts.push("ADR:;;" + esc(sender.street) + ";" + esc(v-city) + ";;" + esc(v-zip)
+              + ";" + esc(v-country))
           }
           if sender.at("phone", default: none) != none {
-            vcard-parts.push("TEL:" + sender.phone)
+            vcard-parts.push("TEL:" + esc(sender.phone))
           }
           if sender.at("email", default: none) != none {
-            vcard-parts.push("EMAIL:" + sender.email)
+            vcard-parts.push("EMAIL:" + esc(sender.email))
           }
           vcard-parts.push("END:VCARD")
           let vcard = vcard-parts.join("\n")
@@ -271,7 +298,7 @@
         sep
         if sender.at("street", default: none) != none { sender.street }
         sep
-        if sender.at("city", default: none) != none { sender.city }
+        if place-line != none { place-line }
       })
     }),
   )
@@ -384,13 +411,23 @@
 // are refused; accent falls back to the default colour unless it is "#RRGGBB"; qr is a bool.
 // `signature` cannot be overridden from the note: the note must not choose which file next to
 // the profile is read (x-profile-signature is ignored).
-#let text-fields = ("name", "street", "city", "phone", "email", "iban", "bic", "bank")
+// `zip` and `country` are text fields too: an unquoted `zip: 01067` is the integer 1067 in YAML,
+// so a German postcode (country empty, Germany or Deutschland) that came in as an integer is
+// left-padded with zeros back to 5 digits before it becomes text; other countries keep the digits.
+#let text-fields = ("name", "street", "zip", "city", "country", "phone", "email", "iban", "bic", "bank")
 #let sender = {
   let s = profile
   for (k, v) in fm.pairs() {
     if k.starts-with("x-profile-") and k != "x-profile-signature" {
       s.insert(k.slice("x-profile-".len()), v)
     }
+  }
+  let z = s.at("zip", default: none)
+  if type(z) == int and z >= 0 {
+    let c = s.at("country", default: none)
+    let c = if c == none { "" } else { lower(str(c).trim()) }
+    let t = str(z)
+    if c in ("", "germany", "deutschland") and t.len() < 5 { s.insert("zip", "0" * (5 - t.len()) + t) }
   }
   for k in text-fields {
     let v = s.at(k, default: none)

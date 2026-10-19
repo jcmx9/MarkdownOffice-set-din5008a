@@ -1,9 +1,13 @@
-# Beispielprofil (fiktive Daten). Eigene Profile: ~/Documents/Markdown Office/Vorlagen/profiles/<name>.yaml
-# Telefonnummern und accent in Anführungszeichen setzen: YAML liest +4989… sonst als Zahl (ohne Plus)
-# und #B03060 als Kommentar. signature: nur ein .svg-Dateiname direkt neben diesem Profil.
+# Beispielprofil (fiktive Daten). Eigene Profile: ~/Documents/Markdown Office/Vorlagen/din5008a/profiles/<name>.yaml
+# (nur für dieses Set; dort legt „Profil anlegen …“ sie ab) oder ~/Documents/Markdown Office/Vorlagen/profiles/<name>.yaml
+# (gemeinsam für alle Sets).
+# Telefonnummern, zip und accent in Anführungszeichen setzen: YAML liest +4989… sonst als Zahl (ohne Plus),
+# 01067 als 1067 und #B03060 als Kommentar. signature: nur ein .svg-Dateiname direkt neben diesem Profil.
+# country (für den vCard-QR-Code) fehlt hier: leer heißt Germany.
 name: Dr. Anna Weber
 street: Lindenallee 12
-city: 80331 München
+zip: "80331"
+city: München
 phone: "089 1234567"
 email: anna.weber@example.de
 iban: DE91 7002 0500 0009 8765 43

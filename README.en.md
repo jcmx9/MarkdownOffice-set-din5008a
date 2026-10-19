@@ -1,6 +1,6 @@
 # Markdown Office – Set `din5008a`
 
-**Version:** 26.10.0 · [Deutsch](README.md)
+**Version:** 26.10.1 · [Deutsch](README.md)
 
 > Business letters after DIN 5008 Form A, written as a Markdown note.
 
@@ -95,7 +95,9 @@ A profile is a YAML file with the sender data. Further files (signature) sit dir
 |-------|---------|
 | `name` | Name (information block, return address, footer, below the signature) |
 | `street` | Street and number |
-| `city` | Postcode and city |
+| `zip` | Postcode, quoted, e.g. `"01067"`; printed as "postcode city" on one line |
+| `city` | City; without `zip` as before "postcode city" in one field (the vCard QR code then splits off a leading 4 to 5 digit postcode itself) |
+| `country` | Country for the vCard QR code (not printed); empty: `Germany` |
 | `phone` | Phone |
 | `email` | Email |
 | `iban` | IBAN (footer) |
@@ -106,13 +108,14 @@ A profile is a YAML file with the sender data. Further files (signature) sit dir
 | `signature-width` | Width of the signature in mm, e.g. `40mm` (anything else: 40 mm) |
 | `accent` | Accent colour for marks, lines, sender and QR code, quoted as `"#RRGGBB"`, e.g. `"#B03060"`; empty or invalid: `#B03060` |
 
-The text fields (`name` to `bank`) are set as text; a list or map there stops the export with a message. **Put phone numbers in quotes** (`phone: "+49 89 123456"`): YAML reads an unquoted `+4989123456` as a number and the plus is lost. Likewise always quote `accent`: unquoted, `#B03060` is a YAML comment and the default colour applies. `qr` accepts `true`/`yes`/`on`.
+The text fields (`name`, `street`, `zip`, `city`, `country`, `phone`, `email`, `iban`, `bic`, `bank`) are set as text; a list or map there stops the export with a message. **Put phone numbers in quotes** (`phone: "+49 89 123456"`): YAML reads an unquoted `+4989123456` as a number and the plus is lost. **Quote `zip` as well** (`zip: "01067"`): unquoted, YAML reads `01067` as the number 1067; for German addresses (`country` empty, `Germany` or `Deutschland`) the template pads it back to five digits, for other countries it does not. Likewise always quote `accent`: unquoted, `#B03060` is a YAML comment and the default colour applies. `qr` accepts `true`/`yes`/`on`.
 
 A profile name (`a-z`, `0-9`, `_`, `-`) is looked up in this order; the first existing file wins:
 
 1. `profiles/<name>.yaml` in the note's folder
-2. `profiles/<name>.yaml` in the templates folder (`~/Documents/Markdown Office/Vorlagen/`)
-3. `profiles/<name>.yaml` in the set folder (example profiles such as `beispiel`)
+2. `din5008a/profiles/<name>.yaml` in the templates folder (`~/Documents/Markdown Office/Vorlagen/`; "Profil anlegen …" stores profiles there)
+3. `profiles/<name>.yaml` in the templates folder (shared by all sets)
+4. `profiles/<name>.yaml` in the set folder (example profiles such as `beispiel`)
 
 ### Signature
 

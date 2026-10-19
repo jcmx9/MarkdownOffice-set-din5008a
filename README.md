@@ -1,6 +1,6 @@
 # Markdown Office – Set `din5008a`
 
-**Version:** 26.10.0 · [English](README.en.md)
+**Version:** 26.10.1 · [English](README.en.md)
 
 > Geschäftsbriefe nach DIN 5008 Form A, geschrieben als Markdown-Notiz.
 
@@ -95,7 +95,9 @@ Ein Profil ist eine YAML-Datei mit den Absenderdaten. Weitere Dateien (Unterschr
 |------|-----------|
 | `name` | Name (Informationsblock, Rücksendeangabe, Fußzeile, unter der Unterschrift) |
 | `street` | Straße und Hausnummer |
-| `city` | PLZ und Ort |
+| `zip` | Postleitzahl, in Anführungszeichen, z. B. `"01067"`; gedruckt wird „PLZ Ort“ in einer Zeile |
+| `city` | Ort; ohne `zip` wie bisher „PLZ Ort“ in einem Feld (der vCard-QR-Code trennt eine führende 4- bis 5-stellige PLZ dann selbst ab) |
+| `country` | Land für den vCard-QR-Code (wird nicht gedruckt); leer: `Germany` |
 | `phone` | Telefon |
 | `email` | E-Mail |
 | `iban` | IBAN (Fußzeile) |
@@ -106,13 +108,14 @@ Ein Profil ist eine YAML-Datei mit den Absenderdaten. Weitere Dateien (Unterschr
 | `signature-width` | Breite der Unterschrift in mm, z. B. `40mm` (andere Angaben: 40 mm) |
 | `accent` | Akzentfarbe für Marken, Linien, Absender und QR-Code, in Anführungszeichen als `"#RRGGBB"`, z. B. `"#B03060"`; leer oder ungültig: `#B03060` |
 
-Die Textfelder (`name` bis `bank`) werden als Text gesetzt; eine Liste oder Zuordnung dort bricht den Export mit einer Meldung ab. **Telefonnummern in Anführungszeichen setzen** (`phone: "+49 89 123456"`): YAML liest `+4989123456` ohne Anführungszeichen als Zahl, das Plus fällt dann weg. Ebenso `accent` immer in Anführungszeichen: ohne sie ist `#B03060` in YAML ein Kommentar, und die Standardfarbe gilt. `qr` versteht `true`/`yes`/`on`.
+Die Textfelder (`name`, `street`, `zip`, `city`, `country`, `phone`, `email`, `iban`, `bic`, `bank`) werden als Text gesetzt; eine Liste oder Zuordnung dort bricht den Export mit einer Meldung ab. **Telefonnummern in Anführungszeichen setzen** (`phone: "+49 89 123456"`): YAML liest `+4989123456` ohne Anführungszeichen als Zahl, das Plus fällt dann weg. **Auch `zip` in Anführungszeichen setzen** (`zip: "01067"`): ohne sie liest YAML `01067` als Zahl 1067; für deutsche Adressen (`country` leer, `Germany` oder `Deutschland`) füllt die Vorlage wieder auf fünf Stellen auf, für andere Länder nicht. Ebenso `accent` immer in Anführungszeichen: ohne sie ist `#B03060` in YAML ein Kommentar, und die Standardfarbe gilt. `qr` versteht `true`/`yes`/`on`.
 
 Ein Profilname (`a-z`, `0-9`, `_`, `-`) wird in dieser Reihenfolge gesucht, die erste vorhandene Datei gilt:
 
 1. `profiles/<name>.yaml` im Ordner der Notiz
-2. `profiles/<name>.yaml` im Vorlagenordner (`~/Documents/Markdown Office/Vorlagen/`)
-3. `profiles/<name>.yaml` im Set-Ordner (Beispielprofile wie `beispiel`)
+2. `din5008a/profiles/<name>.yaml` im Vorlagenordner (`~/Documents/Markdown Office/Vorlagen/`; dort legt „Profil anlegen …“ Profile ab)
+3. `profiles/<name>.yaml` im Vorlagenordner (gemeinsam für alle Sets)
+4. `profiles/<name>.yaml` im Set-Ordner (Beispielprofile wie `beispiel`)
 
 ### Unterschrift
 

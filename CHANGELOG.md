@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [26.10.1] - 2026-10-19
+
+### Added
+- Profile keys `zip` (postcode) and `country` (vCard only, default `Germany`); the printed sender line stays "<zip> <city>" on one line
+- An unquoted German `zip` that YAML read as an integer (`01067` -> 1067) is padded back to 5 digits
+
+### Changed
+- vCard QR code: `ADR` carries locality, postal code and country in their own components (`ADR:;;<street>;<city>;;<zip>;<country>`); without `zip` a leading 4-5 digit postcode is split off `city`, so existing profiles print the same text and get a proper vCard
+- vCard values escape `\`, `,` and `;`
+- Example profile `beispiel` uses `zip` + `city`; README lists the per-set profile folder `Vorlagen/din5008a/profiles/`
+
 ## [26.10.0] - 2026-10-18
 
 ### Added
