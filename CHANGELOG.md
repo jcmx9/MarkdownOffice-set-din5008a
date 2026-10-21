@@ -8,6 +8,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 - `din5008a.schema.yaml`: key types and allowed values for Markdown Office's YAML check („YAML prüfen …“, `markdown-office validate`)
 
+### Fixed
+- `lang:` with a region (`de-AT`) no longer stops the export with "expected two or three letter language code": the region is split off and passed to `text(region:)`; `de-AT` gets the German labels and date
+
 ## [26.10.1] - 2026-10-19
 
 ### Added

@@ -29,6 +29,7 @@
   attachments: (),
   fold-marks: true,
   lang: "de",
+  region: none,
   body,
 ) = {
   // -- Fonts --
@@ -177,7 +178,8 @@
   )
 
   // -- Default text settings --
-  set text(font: font-body, size: 11pt, lang: lang, region: if lang == "de" { "DE" } else { none })
+  set text(font: font-body, size: 11pt, lang: lang,
+    region: if region != none { region } else if lang == "de" { "DE" } else { none })
   // all bold → semibold (headings, *strong*, etc.)
   show strong: it => text(weight: 600, it.body)
   show heading: it => block(sticky: true, text(weight: 600, size: 11pt, it.body))
@@ -391,7 +393,12 @@
 #let source = inp("source", default: none)
 #let src-text = if source == none { "" } else { read(source) }
 #let fm = frontmatter(src-text)
-#let lang = inp("lang", default: "de")
+// `lang:` may carry a region (de-AT): text(lang:) takes only the language code and stops the
+// export otherwise ("expected two or three letter language code"), so the region (two letters)
+// is split off and passed as `region:`; labels and date follow the language.
+#let lang-parts = inp("lang", default: "de").split("-")
+#let lang = lang-parts.first()
+#let lang-region = lang-parts.slice(1).find(p => p.len() == 2)
 #let probe = inp("probe", default: "false") == "true"
 
 // Sender: the profile file the pipeline found, each field overridable as x-profile-<field>.
@@ -545,6 +552,7 @@
   debug: flag("x-debug", false),
   fold-marks: flag("x-fold-marks", true),
   lang: lang,
+  region: lang-region,
 )
 
 // Mermaid diagrams (```mermaid) offline via the bundled mmdr package, with memo's quiet palette

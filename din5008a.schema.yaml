@@ -4,8 +4,9 @@ schema: 1
 keys:
   # Empty means today (din5008a.typ: datetime.today()).
   date: { type: date, empty: today }
-  # The template only knows `lang == "de"`; any other value silently gets English labels, so a
-  # value like de-AT is worth flagging here.
+  # The template has labels for de and en only; any other language silently gets English ones.
+  # A regional code such as de-AT renders (the region is split off before text(lang:)) but is
+  # flagged, so the letter's language stays one of the two the set is made for.
   lang: { type: enum, values: [de, en] }
   # Address window: at most 6 lines (DIN 5008 zone; the template asserts it).
   x-to: { type: lines, max: 6 }
