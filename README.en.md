@@ -87,6 +87,8 @@ The shared Markdown Office keys (`title`, `embed_source`, `hard_breaks`) apply a
 
 If `profile:` is missing, the profile is not found, `x-to` is missing or has more than 6 lines, the export stops with a message and writes no PDF: a wrongly addressed letter is worse than none.
 
+The file [`din5008a.schema.yaml`](din5008a.schema.yaml) describes the set's keys (types, allowed values, limits). Markdown Office uses it to check a note via „YAML prüfen …“ (Edit menu) and `markdown-office validate`; extra keys remain allowed.
+
 ## Profile
 
 A profile is a YAML file with the sender data. Further files (signature) sit directly next to it.

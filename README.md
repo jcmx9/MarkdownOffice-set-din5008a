@@ -87,6 +87,8 @@ Außerdem gelten die gemeinsamen Schlüssel von Markdown Office (`title`, `embed
 
 Fehlt `profile:`, wird das Profil nicht gefunden, fehlt `x-to` oder hat es mehr als 6 Zeilen, bricht der Export mit einer Meldung ab und schreibt kein PDF: ein falsch adressierter Brief ist schlimmer als keiner.
 
+Die Datei [`din5008a.schema.yaml`](din5008a.schema.yaml) beschreibt die Schlüssel des Sets (Typen, erlaubte Werte, Grenzen). Markdown Office prüft damit eine Notiz über „YAML prüfen …“ (Bearbeiten-Menü) und `markdown-office validate`; zusätzliche Schlüssel bleiben erlaubt.
+
 ## Profil
 
 Ein Profil ist eine YAML-Datei mit den Absenderdaten. Weitere Dateien (Unterschrift) liegen direkt daneben.

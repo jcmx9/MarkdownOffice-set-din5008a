@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- `din5008a.schema.yaml`: key types and allowed values for Markdown Office's YAML check („YAML prüfen …“, `markdown-office validate`)
+
 ## [26.10.1] - 2026-10-19
 
 ### Added

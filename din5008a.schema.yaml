@@ -1,0 +1,13 @@
+# Keys of the din5008a set for Markdown Office's YAML check ("YAML prüfen …", `markdown-office validate`).
+# Extra keys in a note are always allowed.
+schema: 1
+keys:
+  # Empty means today (din5008a.typ: datetime.today()).
+  date: { type: date, empty: today }
+  lang: { type: enum, values: [de, en] }
+  # Address window: at most 6 lines (DIN 5008 zone; the template asserts it).
+  x-to: { type: lines, max: 6 }
+  x-subject: { type: text }
+  x-closing: { type: text }
+  x-sign: { type: bool }
+  x-attachments: { type: list }
