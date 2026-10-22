@@ -5,6 +5,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `din5008a.css`: the editor preview takes the letter's typesetting from the PDF (Source Serif 4 11pt, ragged right, 165 mm measure, 12.87pt lines, paragraph and heading gaps, 10pt mono tables and code), needs Markdown Office with set previews (TEMPLATES.md section 8)
+- `din5008a.preview.yaml`: preview head (return line, address, date, subject) and foot (closing, signature over the blank lines, signer, enclosures) from the front matter and the profile
+
 ## [26.10.2] - 2026-10-21
 
 ### Added

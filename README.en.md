@@ -14,8 +14,12 @@ The layout comes from [typst-DIN5008a](https://github.com/jcmx9/typst-DIN5008a).
 |------|---------|
 | `din5008a.typ` | Typst template (self-contained; reads front matter, profile and Markdown text) |
 | `din5008a.header.md` | Front matter template with all common keys |
+| `din5008a.css` | Editor preview: font, sizes, measure and spacing as in the PDF (no effect on the PDF) |
+| `din5008a.preview.yaml` | Editor preview: letter head (return line, address, date, subject) and letter end (closing, signature, name, enclosures) from front matter and profile |
 | `profiles/beispiel.yaml` | Example profile (fictional data) |
 | `profiles/beispiel-unterschrift.svg` | Example signature |
+
+The preview and Present mode of Markdown Office show a note with `template: din5008a` in the letter's typesetting: Source Serif 4 at 11 pt, ragged right, 165 mm measure, line and paragraph spacing as in the PDF; letter head and letter end appear when the YAML header is hidden. Page layout, information block, footer and fold marks exist only in the PDF.
 
 ## Installation
 

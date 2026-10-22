@@ -1,0 +1,200 @@
+/*
+ * din5008a – editor preview (Markdown Office, TEMPLATES.md section 8).
+ * Has no influence on the PDF. Every value is taken from din5008a.typ or measured in a PDF
+ * it produced (pdftotext -bbox, Markdown Office pipeline, 2026-10-22). Lengths are print
+ * units; the app scales them with its zoom.
+ *
+ * Font metrics used below (Chromium line box = hhea ascent + descent):
+ *   Source Serif 4 11pt: ascent 11.40pt, descent 3.69pt, cap height 7.37pt
+ *   Source Sans 3 9pt:   ascent 9.00pt,  descent 2.93pt
+ *   Source Code 10pt:    ascent 9.84pt,  descent 2.73pt, cap height 6.60pt
+ * In a body line box of 12.87pt the baseline sits 10.29pt below the top, 2.58pt above the
+ * bottom. Typst measures lines from cap height to baseline (top-edge/bottom-edge defaults).
+ */
+
+.mdo-preview {
+  /* set text(font: "Source Serif 4", size: 11pt); bundled as "mdo Serif" */
+  --mdo-body-font: var(--mdo-font-serif);
+  --mdo-body-size: 11pt;
+  --mdo-body-weight: 400;
+  /* show strong: text(weight: 600) */
+  --mdo-bold-weight: 600;
+  /* par(leading: 5.5pt): cap height 7.37 + 5.5 = 12.87pt baseline to baseline (measured) */
+  --mdo-line-height: 12.87pt;
+  /* par(justify: false) */
+  --mdo-align: left;
+  /* par(spacing: 16.5pt): 16.5 + 7.37 = 23.87pt across a paragraph break (measured);
+     the blank line adds 23.87 - 12.87 = 11pt */
+  --mdo-par-gap: 11pt;
+  /* A4 210mm - margin left 25mm - margin right 20mm */
+  --mdo-measure: 165mm;
+  /* show heading: text(weight: 600, size: 11pt) in the body font, flush left, no rule */
+  --mdo-heading-font: var(--mdo-font-serif);
+  --mdo-heading-align: left;
+  --mdo-h1-font: var(--mdo-heading-font);
+  --mdo-h2-font: var(--mdo-heading-font);
+  --mdo-h3-font: var(--mdo-heading-font);
+  --mdo-h1-size: 11pt;
+  --mdo-h2-size: 11pt;
+  --mdo-h3-size: 11pt;
+  --mdo-h1-weight: 600;
+  --mdo-h2-weight: 600;
+  --mdo-h3-weight: 600;
+  --mdo-h1-color: var(--mdo-text);
+  --mdo-h2-color: var(--mdo-text);
+  --mdo-h3-color: var(--mdo-text);
+  --mdo-h1-rule: transparent;
+  --mdo-h3-decoration: none;
+  /* show table: set text(font: font-mono, size: 10pt), regular weight, no tracking */
+  --mdo-table-font: var(--mdo-font-code);
+  --mdo-table-size: 10pt;
+  --mdo-table-weight: 400;
+  --mdo-table-tracking: 0;
+  /* show raw.where(block: true): text(font: font-mono, size: 10pt) */
+  --mdo-code-size: 10pt;
+  /* the letter head is flush left; the date is right-aligned below */
+  --mdo-titleblock-align: left;
+}
+
+/*
+ * Headings. Measured baseline distances: paragraph -> H1 27.17pt, paragraph -> H2..H6
+ * 23.21pt, heading -> paragraph 15.62pt (the outer heading block keeps Typst's default
+ * spacing at the default heading sizes). Blank lines next to a heading collapse in the
+ * preview, so the heading line carries the gap: padding = distance - 12.87pt.
+ * Not reproducible: Typst collapses H1 below and H2 above into one gap (H1 -> H2 23.21pt);
+ * the preview adds both paddings (25.96pt).
+ */
+.mdo-preview .cm-line:is(.mdo-h1, .mdo-h2, .mdo-h3, .mdo-h4, .mdo-h5, .mdo-h6) {
+  font-size: 11pt;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--mdo-text);
+  text-decoration: none;
+  line-height: 12.87pt;
+  padding-top: 10.34pt;
+  padding-bottom: 2.75pt;
+  background: none;
+}
+.mdo-preview .cm-line.mdo-h1 {
+  padding-top: 14.3pt;
+}
+.mdo-preview
+  .cm-content
+  > .cm-line:first-child:is(.mdo-h1, .mdo-h2, .mdo-h3, .mdo-h4, .mdo-h5, .mdo-h6) {
+  padding-top: 0;
+}
+
+/* Inline code: show raw.where(block: false): text(font: font-mono, size: 10pt) */
+.mdo-preview .mdo-code-inline {
+  font-size: 10pt;
+}
+
+/*
+ * Code blocks: 10pt mono, lines 6.6 + 5.5 = 12.1pt apart (measured 12.10pt), inset 8pt.
+ * Paragraph -> first code line 31.1pt and last code line -> paragraph 31.87pt (block spacing
+ * 16.5pt + inset 8pt + cap heights): with the blank lines around the block, a fence line of
+ * 8pt reproduces both.
+ */
+.mdo-preview .cm-line.mdo-codeblock {
+  line-height: 12.1pt;
+  padding-left: calc(6px + 8pt);
+}
+.mdo-preview .cm-line.mdo-codefence {
+  font-size: 8pt;
+  line-height: 8pt;
+  padding-left: calc(6px + 8pt);
+}
+
+/*
+ * Tables: table(inset: (x: 6pt, y: 3pt), stroke: 0.75pt + gray), header row weight 600,
+ * cells start-aligned. Measured row pitch 12.6pt (cap 6.6 + 2 x 3pt inset); CSS borders
+ * take space, so line height 11.85pt + 0.75pt border keeps the pitch. Block spacing 16.5pt
+ * before and after: the blank lines (11pt) plus the body line's part below/above the
+ * baseline leave 2.92pt above and 2.58pt below.
+ */
+.mdo-preview .mdo-table-wrap {
+  padding-top: 2.92pt;
+  padding-bottom: 2.58pt;
+}
+.mdo-preview table.mdo-table :is(th, td) {
+  padding: 0 6pt;
+  line-height: 11.85pt;
+  border: 0.75pt solid var(--mdo-hairline);
+}
+/* fill: header rgb(210, 210, 210), every second data row rgb(240, 240, 240) */
+.mdo-preview table.mdo-table th {
+  text-align: left;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--mdo-text) 18%, var(--mdo-bg));
+}
+.mdo-preview table.mdo-table tr.mdo-table-stripe td {
+  background: color-mix(in srgb, var(--mdo-text) 7%, var(--mdo-bg));
+}
+
+/*
+ * Head: return line, address zone, date, subject. Distances measured in the PDF
+ * (baseline to baseline): return line -> address 12.77pt, address line 1 -> date
+ * 132.38pt, date -> subject 34.18pt, subject -> first text line 40.88pt.
+ */
+.mdo-preview .mdo-titleblock {
+  padding: 0;
+}
+/* Return line: Source Sans 3 9pt, underlined (stroke 0.75pt, offset 1.5pt). Line height
+   11pt puts the address baseline 12.77pt below its baseline. */
+.mdo-preview .mdo-tb-sender {
+  font-family: var(--mdo-font-sans);
+  font-size: 9pt;
+  line-height: 11pt;
+  text-decoration: underline;
+  text-decoration-thickness: 0.75pt;
+  text-underline-offset: 1.5pt;
+}
+/* Address zone: 27.3mm high (6 lines), so the date stays in place for 1 to 6 lines */
+.mdo-preview .mdo-tb-address {
+  min-height: 27.3mm;
+}
+/* Date: bottom right of the information block; 132.38 - 77.39 (zone) = 54.99pt above it */
+.mdo-preview .mdo-tb-date {
+  margin-top: 19.4mm;
+  text-align: right;
+}
+/* Subject: weight 600, then v(6mm); the blank line after the front matter adds the rest */
+.mdo-preview .mdo-tb-subject {
+  margin-top: 21.31pt;
+  margin-bottom: 6mm;
+  font-weight: 600;
+}
+
+/*
+ * Foot: closing, three blank lines, signer; the signature overlaps the blank lines from
+ * above (place(dx: -2mm, dy: -(height + 2mm)) over the name block). Measured: closing ->
+ * signer 62.48pt, signer -> "Anlagen:" 23.87pt, attachment lines 12.87pt.
+ * Assumes the note ends with a line break (an empty last line, 11pt like any blank line),
+ * which carries the paragraph gap before the closing.
+ */
+.mdo-preview .mdo-footblock {
+  position: relative;
+  padding: 0;
+}
+.mdo-preview .mdo-tb-signer {
+  margin-top: 49.61pt;
+}
+/* Out of the flow at its static place under the closing: bottom edge 46.86pt below the
+   closing line = signer baseline (59.9pt) - cap height (7.37pt) - 2mm. */
+.mdo-preview img.mdo-tb-signature {
+  position: absolute;
+  margin-top: 46.86pt;
+  margin-left: -2mm;
+  transform: translateY(-100%);
+}
+.mdo-preview .mdo-tb-attachments {
+  margin-top: 11pt;
+}
+.mdo-preview .mdo-tb-attachments .mdo-tb-label {
+  font-weight: 600;
+}
+/* Each attachment after a small square in Source Sans 3, as the PDF lists them */
+.mdo-preview .mdo-tb-attachments .mdo-tb-line::before {
+  content: "▪ ";
+  font-family: var(--mdo-font-sans);
+}

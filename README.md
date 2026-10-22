@@ -14,8 +14,12 @@ Das Layout stammt aus [typst-DIN5008a](https://github.com/jcmx9/typst-DIN5008a).
 |-------|-------|
 | `din5008a.typ` | Typst-Vorlage (eigenständig; liest Frontmatter, Profil und Markdown-Text) |
 | `din5008a.header.md` | Frontmatter-Vorlage mit allen üblichen Schlüsseln |
+| `din5008a.css` | Editor-Vorschau: Schrift, Größen, Satzbreite und Abstände wie im PDF (keine Wirkung auf das PDF) |
+| `din5008a.preview.yaml` | Editor-Vorschau: Briefkopf (Rücksendeangabe, Anschrift, Datum, Betreff) und Briefschluss (Gruß, Unterschrift, Name, Anlagen) aus Frontmatter und Profil |
 | `profiles/beispiel.yaml` | Beispielprofil (fiktive Daten) |
 | `profiles/beispiel-unterschrift.svg` | Beispielunterschrift |
+
+Die Vorschau und der Präsentationsmodus von Markdown Office zeigen eine Notiz mit `template: din5008a` im Satz des Briefs: Source Serif 4 in 11 pt, Flattersatz, 165 mm Satzbreite, Zeilen- und Absatzabstände wie im PDF; Briefkopf und Briefschluss erscheinen, wenn der YAML-Header ausgeblendet ist. Seitenaufteilung, Informationsblock, Fußzeile und Falzmarken gibt es nur im PDF.
 
 ## Installation
 

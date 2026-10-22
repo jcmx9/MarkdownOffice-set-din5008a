@@ -1,0 +1,34 @@
+# din5008a – head and foot blocks of the editor preview (Markdown Office, TEMPLATES.md
+# section 8). Has no influence on the PDF; mirrors what din5008a.typ prints around the text.
+# Styling: din5008a.css (.mdo-tb-<class>).
+preview: 1
+head:
+  # Return line over the address zone, separated like the PDF (" ▪ ")
+  - class: sender
+    parts: ["{profile.name}", "{profile.street}", "{profile.zip} {profile.city}"]
+    sep: " ▪ "
+  # Address zone: one line per x-to entry
+  - class: address
+    lines: "{x-to}"
+  # Date: long form by lang; empty or missing means today, as in the PDF
+  - class: date
+    text: "{date}"
+    today: true
+  - class: subject
+    text: "{x-subject}"
+foot:
+  # The whole foot needs a closing, like the PDF
+  - class: closing
+    text: "{x-closing}"
+  # x-sign defaults to true in the PDF, so a missing x-sign still shows the signature
+  - class: signature
+    image: "{profile.signature}"
+    width: "{profile.signature-width|40mm}"
+    when: ["{x-closing}", "{x-sign|true}"]
+  - class: signer
+    text: "{profile.name}"
+    when: "{x-closing}"
+  - class: attachments
+    label: { de: "Anlagen:", en: "Enclosures:" }
+    lines: "{x-attachments}"
+    when: "{x-closing}"
