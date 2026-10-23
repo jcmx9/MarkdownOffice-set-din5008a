@@ -5,6 +5,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `din5008a.preview.yaml`: `mermaid:` (`base-theme`, `theme`, `layout`, `max-height`, `font-weight`) with the arguments of the `mermaid-svg` call and size rule in `din5008a.typ`, so the editor preview draws Mermaid diagrams like the PDF (needs Markdown Office with diagrams in the preview)
+- README: section „Editor-Vorschau“ / "Editor preview" names the Mermaid values and their sources in `din5008a.typ`
+
 ## [26.10.5] - 2026-10-23
 
 ### Added

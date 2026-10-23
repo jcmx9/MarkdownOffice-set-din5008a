@@ -32,3 +32,30 @@ foot:
     label: { de: "Anlagen:", en: "Enclosures:" }
     lines: "{x-attachments}"
     when: "{x-closing}"
+# mermaid: the arguments of the `mermaid-svg` call and its size rule in din5008a.typ, so the preview
+# draws a diagram like the PDF (TEMPLATES.md section 8.2). Source lines are of din5008a.typ.
+mermaid:
+  base-theme: modern          # din5008a.typ:586: base-theme: "modern"
+  max-height: 12cm            # din5008a.typ:562: mermaid-max-height
+  font-weight: 500            # din5008a.typ:587: .replace("font-family=", "font-weight=\"500\" font-family=")
+  layout:                     # din5008a.typ:563: mermaid-layout
+    node_spacing: 25
+    rank_spacing: 35
+  theme:                      # din5008a.typ:564-581: mermaid-theme
+    font_family: "SourceSans3VF"
+    primary_color: "#f4f2ee"
+    primary_text_color: "#2b2b2b"
+    primary_border_color: "#b9b2a6"
+    secondary_color: "#fbeab0"
+    tertiary_color: "#fdfcfa"
+    line_color: "#6b6b6b"
+    text_color: "#2b2b2b"
+    edge_label_background: "#ffffff"
+    cluster_background: "#fdfcfa"
+    cluster_border: "#e4e1dc"
+    background: "#ffffff"
+    sequence_actor_fill: "#f4f2ee"
+    sequence_actor_border: "#b9b2a6"
+    sequence_actor_line: "#b9b2a6"
+    sequence_note_fill: "#fbeab0"
+    sequence_note_border: "#e0c66a"

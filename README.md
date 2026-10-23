@@ -170,8 +170,9 @@ Die Unterschrift ist eine SVG-Datei direkt neben dem Profil; jeder andere Wert f
 | `--mdo-hyphenation-cost`, `--mdo-runt-cost` (Standard `100%`) | `par(costs:)` nicht gesetzt; im Flattersatz ohne Wirkung |
 | `--mdo-body-size: 11pt`, `--mdo-line-height: 12.87pt` | `text(size: 11pt)`, `par(leading: 5.5pt)` plus Versalhöhe 7,37 pt (gemessen) |
 | `--mdo-measure: 165mm` | Seite 210 mm − 25 mm − 20 mm |
+| `mermaid:` in `din5008a.preview.yaml` | Theme, Layout, `max-height: 12cm` und `font-weight: 500` der Mermaid-Regel (`din5008a.typ`, Zeilen 562–587); die Vorschau zeichnet Diagramme mit demselben mmdr-Plugin wie das PDF |
 
-Was vom PDF abweicht: Eine im Quelltext umbrochene Markdown-Zeile ist ein eigener Absatz (ein Absatz gehört in eine Zeile), der Absatz mit dem Cursor behält den Umbruch des Browsers, und Code und Tabellen bleiben roh. Seitenaufteilung, Informationsblock, Fußzeile und Falzmarken gibt es nur im PDF.
+Mermaid-Blöcke auf oberster Ebene zeichnet die Vorschau als Diagramm, innerhalb von Listen und Zitaten, im Block mit dem Cursor und in der Code-Ansicht bleibt der Quelltext (braucht Markdown Office mit Diagrammen in der Vorschau). Was vom PDF abweicht: Eine im Quelltext umbrochene Markdown-Zeile ist ein eigener Absatz (ein Absatz gehört in eine Zeile), der Absatz mit dem Cursor behält den Umbruch des Browsers, und Code und Tabellen bleiben roh. Seitenaufteilung, Informationsblock, Fußzeile und Falzmarken gibt es nur im PDF.
 
 ## Lizenz
 

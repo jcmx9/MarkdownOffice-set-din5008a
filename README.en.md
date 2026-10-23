@@ -170,8 +170,9 @@ The signature is an SVG file directly next to the profile; any other value for `
 | `--mdo-hyphenation-cost`, `--mdo-runt-cost` (default `100%`) | `par(costs:)` not set; no effect in ragged text |
 | `--mdo-body-size: 11pt`, `--mdo-line-height: 12.87pt` | `text(size: 11pt)`, `par(leading: 5.5pt)` plus cap height 7.37 pt (measured) |
 | `--mdo-measure: 165mm` | page 210 mm − 25 mm − 20 mm |
+| `mermaid:` in `din5008a.preview.yaml` | theme, layout, `max-height: 12cm` and `font-weight: 500` of the Mermaid rule (`din5008a.typ`, lines 562–587); the preview draws diagrams with the same mmdr plugin as the PDF |
 
-What still differs from the PDF: a Markdown line wrapped in the source is its own paragraph (write a paragraph on one line), the paragraph with the cursor keeps the browser's wrapping, and code and tables stay raw. Page layout, information block, footer and fold marks exist only in the PDF.
+The preview draws top-level Mermaid blocks as diagrams; inside lists and quotes, in the block with the cursor and in the code view the source stays (needs Markdown Office with diagrams in the preview). What still differs from the PDF: a Markdown line wrapped in the source is its own paragraph (write a paragraph on one line), the paragraph with the cursor keeps the browser's wrapping, and code and tables stay raw. Page layout, information block, footer and fold marks exist only in the PDF.
 
 ## License
 
