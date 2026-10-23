@@ -5,6 +5,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [26.10.5] - 2026-10-23
+
 ### Added
 - README: section „Editor-Vorschau“ / "Editor preview" with the preview values and their sources in `din5008a.typ`, and what still differs from the PDF (no new CSS values needed for paragraphs set like Typst)
 
