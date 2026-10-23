@@ -1,6 +1,6 @@
 # Markdown Office – Set `din5008a`
 
-**Version:** 26.10.3 · [English](README.en.md)
+**Version:** 26.10.4 · [English](README.en.md)
 
 > Geschäftsbriefe nach DIN 5008 Form A, geschrieben als Markdown-Notiz.
 
