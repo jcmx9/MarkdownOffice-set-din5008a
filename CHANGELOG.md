@@ -5,6 +5,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- `din5008a.css`: `--mdo-list-indent: 0.804em` (the item text starts 8.84pt right of the square, on every line) and `--mdo-table-head-weight: 600`; the optical size follows the pt sizes automatically (needs Markdown Office with preview fidelity step 2)
+
 ## [26.10.3] - 2026-10-22
 
 ### Added

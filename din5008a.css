@@ -50,8 +50,12 @@
   --mdo-table-size: 10pt;
   --mdo-table-weight: 400;
   --mdo-table-tracking: 0;
+  /* table header bold like strong: 600 (the app's default is memo's 680) */
+  --mdo-table-head-weight: 600;
   /* show raw.where(block: true): text(font: font-mono, size: 10pt) */
   --mdo-code-size: 10pt;
+  /* lists: the item text starts 8.84pt right of the square marker (11pt: 0.804em), on every line */
+  --mdo-list-indent: 0.804em;
   /* the letter head is flush left; the date is right-aligned below */
   --mdo-titleblock-align: left;
 }
