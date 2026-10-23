@@ -159,6 +159,20 @@ The signature is an SVG file directly next to the profile; any other value for `
   |<- 25mm ->|                          |<- 20mm ->|
 ```
 
+## Editor preview
+
+`din5008a` is ragged right without hyphenation, so Markdown Office's preview breaks lines like the PDF without `din5008a.css` needing new values (section 8.5 of Markdown Office's TEMPLATES.md). The values and their sources:
+
+| Value | Source |
+|-------|--------|
+| `--mdo-align: left` | `par(justify: false)` |
+| `--mdo-hyphenate` (default `auto`: ragged text does not hyphenate) | `din5008a.typ` does not set `hyphenate` |
+| `--mdo-hyphenation-cost`, `--mdo-runt-cost` (default `100%`) | `par(costs:)` not set; no effect in ragged text |
+| `--mdo-body-size: 11pt`, `--mdo-line-height: 12.87pt` | `text(size: 11pt)`, `par(leading: 5.5pt)` plus cap height 7.37 pt (measured) |
+| `--mdo-measure: 165mm` | page 210 mm − 25 mm − 20 mm |
+
+What still differs from the PDF: a Markdown line wrapped in the source is its own paragraph (write a paragraph on one line), the paragraph with the cursor keeps the browser's wrapping, and code and tables stay raw. Page layout, information block, footer and fold marks exist only in the PDF.
+
 ## License
 
 MIT – see [LICENSE](LICENSE).

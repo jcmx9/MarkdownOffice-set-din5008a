@@ -159,6 +159,20 @@ Die Unterschrift ist eine SVG-Datei direkt neben dem Profil; jeder andere Wert f
   |<- 25mm ->|                          |<- 20mm ->|
 ```
 
+## Editor-Vorschau
+
+`din5008a` ist linksbündig und ohne Silbentrennung; die Vorschau von Markdown Office bricht Zeilen daher wie das PDF, ohne dass `din5008a.css` neue Werte braucht (Abschnitt 8.5 der TEMPLATES.md von Markdown Office). Die Werte und ihre Quellen:
+
+| Wert | Quelle |
+|------|--------|
+| `--mdo-align: left` | `par(justify: false)` |
+| `--mdo-hyphenate` (Standard `auto`: Flattersatz trennt nicht) | `din5008a.typ` setzt `hyphenate` nicht |
+| `--mdo-hyphenation-cost`, `--mdo-runt-cost` (Standard `100%`) | `par(costs:)` nicht gesetzt; im Flattersatz ohne Wirkung |
+| `--mdo-body-size: 11pt`, `--mdo-line-height: 12.87pt` | `text(size: 11pt)`, `par(leading: 5.5pt)` plus Versalhöhe 7,37 pt (gemessen) |
+| `--mdo-measure: 165mm` | Seite 210 mm − 25 mm − 20 mm |
+
+Was vom PDF abweicht: Eine im Quelltext umbrochene Markdown-Zeile ist ein eigener Absatz (ein Absatz gehört in eine Zeile), der Absatz mit dem Cursor behält den Umbruch des Browsers, und Code und Tabellen bleiben roh. Seitenaufteilung, Informationsblock, Fußzeile und Falzmarken gibt es nur im PDF.
+
 ## Lizenz
 
 MIT – siehe [LICENSE](LICENSE).
