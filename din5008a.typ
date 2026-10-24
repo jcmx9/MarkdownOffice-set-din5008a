@@ -600,6 +600,10 @@
   set-document-title: false,
   smart-punctuation: false,
   math: mitex,
-  html: (mdo-alert: mdo-alert, mdo-tasks: mdo-tasks, mdo-task: mdo-task, mdo-keep: mdo-keep),
+  // Note text never runs as Typst code: <!--raw-typst …--> stays a comment. The pipeline's
+  // page break arrives as <mdo-pagebreak/> instead (the pipeline sends it to sets that name it).
+  raw-typst: false,
+  html: (mdo-alert: mdo-alert, mdo-tasks: mdo-tasks, mdo-task: mdo-task, mdo-keep: mdo-keep,
+    mdo-pagebreak: (attrs, body) => pagebreak(weak: true)),
   scope: (image: safe-image, terms: (..pairs) => terms(..pairs.pos().map(p => terms.item(..p)))),
 )

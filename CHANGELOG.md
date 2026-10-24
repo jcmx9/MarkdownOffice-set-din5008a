@@ -5,6 +5,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security
+- Note text never runs as Typst code: `raw-typst: false`, so `<!--raw-typst …-->` in a note stays a comment; the pipeline's page break arrives as `<mdo-pagebreak/>` (needs Markdown Office with the export sandbox)
+
 ## [26.10.6] - 2026-10-23
 
 ### Added
