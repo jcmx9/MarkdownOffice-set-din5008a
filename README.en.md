@@ -1,6 +1,6 @@
 # Markdown Office – Set `din5008a`
 
-**Version:** 26.10.6 · [Deutsch](README.md)
+**Version:** 26.10.7 · [Deutsch](README.md)
 
 > Business letters after DIN 5008 Form A, written as a Markdown note.
 
